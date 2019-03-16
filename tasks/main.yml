@@ -94,7 +94,7 @@
 
 - name: Install docker python module.
   pip:
-    name: 
+    name:
       - docker
       - paramiko
     state: present
@@ -104,7 +104,7 @@
   docker_swarm:
     state: present
     advertise_addr: "{{ ansible_eth0.ipv4.address }}"
-  when: 
+  when:
     - docker_swarm_enabled
     - docker_swarm_node_type == 'manager'
     - docker_swarm_initial_manager is undefined or docker_swarm_initial_manager == hostname
@@ -112,7 +112,7 @@
 
 - name: SSH Fingerprint initial manager.
   shell: "ssh-keyscan -H {{ docker_swarm_initial_manager }}"
-  when: 
+  when:
     - docker_swarm_enabled
     - docker_swarm_initial_manager is defined
   register: ssh_fingerprint
@@ -122,7 +122,7 @@
   file:
     path: /root/.ssh
     state: directory
-  when: 
+  when:
     - docker_swarm_enabled
     - docker_swarm_initial_manager is defined
   become: yes
@@ -132,7 +132,7 @@
     content: "{{ ssh_fingerprint.stdout }}"
     dest: /root/.ssh/known_hosts
   become: yes
-  when: 
+  when:
     - docker_swarm_enabled
     - docker_swarm_initial_manager is defined
 
@@ -160,7 +160,7 @@
     state: inspect
     docker_host: "ssh://{{ docker_swarm_initial_manager_ssh_username }}@{{ docker_swarm_initial_manager }}"
   register: swarm_info
-  when: 
+  when:
     - docker_swarm_enabled
     - docker_swarm_initial_manager is defined
     - docker_swarm_initial_manager != hostname
@@ -172,7 +172,7 @@
     join_token: "{{ swarm_info.swarm_facts.JoinTokens.Manager }}"
     remote_addrs:
      - "{{ docker_swarm_initial_manager }}:2377"
-  when: 
+  when:
     - docker_swarm_enabled
     - docker_swarm_node_type == 'manager'
     - docker_swarm_initial_manager is defined
@@ -185,7 +185,7 @@
     join_token: "{{ swarm_info.swarm_facts.JoinTokens.Worker }}"
     remote_addrs:
      - "{{ docker_swarm_initial_manager }}:2377"
-  when: 
+  when:
     - docker_swarm_enabled
     - docker_swarm_node_type == 'worker'
     - docker_swarm_initial_manager is defined

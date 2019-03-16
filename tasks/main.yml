@@ -111,30 +111,13 @@
   become: yes
 
 - name: SSH Fingerprint initial manager.
-  shell: "ssh-keyscan -H {{ docker_swarm_initial_manager }}"
-  when:
-    - docker_swarm_enabled
-    - docker_swarm_initial_manager is defined
-  register: ssh_fingerprint
-  become: yes
-
-- name: Ensure .ssh directory exists
-  file:
-    path: /root/.ssh
-    state: directory
+  known_hosts:
+    hash_host: "{{ docker_swarm_initial_manager }}"
+    state: present
   when:
     - docker_swarm_enabled
     - docker_swarm_initial_manager is defined
   become: yes
-
-- name: Ensure known_hosts exists
-  copy:
-    content: "{{ ssh_fingerprint.stdout }}"
-    dest: /root/.ssh/known_hosts
-  become: yes
-  when:
-    - docker_swarm_enabled
-    - docker_swarm_initial_manager is defined
 
 - name: Deploy Private Docker Auth SSH key.
   copy:

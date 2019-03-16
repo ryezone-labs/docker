@@ -44,7 +44,7 @@
   become: yes
 
 - name: Get Docker's official GPG key
-  apt_key :
+  apt_key:
     url: "{{ docker_repository_key_url }}"
     id: "{{ docker_repository_key_id }}"
   become: yes

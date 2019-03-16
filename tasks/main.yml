@@ -11,20 +11,19 @@
     name: docker-engine
     state: absent
   become: yes
-  
 
 - name: Remove docker.io
   package:
     name: docker.io
     state: absent
   become: yes
-  
+
 - name: Install apt-transport-https
   package:
     name: apt-transport-https
     state: present
   become: yes
-  
+
 - name: Install ca-certificates
   package:
     name: ca-certificates
@@ -127,7 +126,7 @@
     - docker_swarm_enabled
     - docker_swarm_initial_manager is defined
   become: yes
-  
+
 - name: Ensure known_hosts exists
   copy:
     content: "{{ ssh_fingerprint.stdout }}"

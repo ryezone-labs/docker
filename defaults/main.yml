@@ -10,7 +10,7 @@ docker_release_type: stable
 docker_repository_url: https://download.docker.com/linux/ubuntu
 docker_arch: amd64
 docker_product: docker-ce
-docker_repository: "deb [arch={{ docker_arch }}] {{ docker repository_url }} {{ docker_ubuntu_version }} {{ docker_release_type }}"
+docker_repository: "deb [arch={{ docker_arch }}] {{ docker_repository_url }} {{ docker_ubuntu_version }} {{ docker_release_type }}"
 docker_package: "{{ docker_product }}={{ docker_version }}"
 docker_users:
     - vagrant

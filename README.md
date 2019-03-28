@@ -19,7 +19,7 @@ Role Variables
 | `docker_ubuntu_version` | string | `bionic` | Ubuntu release name.  Used to select the correct apt repository. |
 | `docker_release_type` | string | `stable` | Selects which docker release branch to install.  Valid values include: `edge`, `nightly`, `stable`, `test` |
 | `docker_product` | string | `docker-ce` | Selects the docker product to install.  Valid values include: `docker-ce` and `docker-ee` |
-| `docker_version` | string | `5:18.09.3~3-0~ubuntu-bionic` | Docker package version to install.  Valid values can be listed by running `apt-cache madison docker-ce` |
+| `docker_version` | string | `5:18.09.4~3-0~ubuntu-bionic` | Docker package version to install.  Valid values can be listed by running `apt-cache madison docker-ce` |
 | `docker_users` | Array of string | `[ 'vagrant' ]` | This is a list of users and groups to add to the `docker` group and grant access to the docker socket. |
 | `docker_swarm_enabled` | bool | `false` | Enables docker swarm mode. |
 | `docker_swarm_node_type` | string | `manager` | Configures node as either a `manager` or a `worker` when `{{ docker_swarm_enabled }}` |

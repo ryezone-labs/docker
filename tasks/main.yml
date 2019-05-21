@@ -131,7 +131,7 @@
   become: yes
 
 - name: SSH Fingerprint initial manager.
-  command: "ssh-keygen -F {{ docker_swarm_initial_manager }} -f ~/.ssh/known_hosts"
+  command: "ssh-keyscan {{ docker_swarm_initial_manager }} >> /root/.ssh/known_hosts"
   when:
     - docker_swarm_enabled | bool
     - docker_swarm_initial_manager is defined

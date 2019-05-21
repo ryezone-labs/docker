@@ -113,7 +113,7 @@
 - name: Ensure .ssh directory exists.
   file: 
     state: directory
-    path: ~/.ssh
+    path: /home/vagrant/.ssh
   when:
     - docker_swarm_enabled | bool
     - docker_swarm_initial_manager is defined
@@ -122,7 +122,7 @@
 - name: Ensure known_hosts file exists.
   file: 
     state: touch
-    path: ~/.ssh/known_hosts
+    path: /home/vagrant/.ssh/known_hosts
   when:
     - docker_swarm_enabled | bool
     - docker_swarm_initial_manager is defined
@@ -130,7 +130,7 @@
   become: yes
 
 - name: SSH Fingerprint initial manager.
-  command: "ssh-keyscan {{ docker_swarm_initial_manager }} >> ~/.ssh/known_hosts 2>/dev/null"
+  command: "ssh-keyscan {{ docker_swarm_initial_manager }} >> /home/vagrant/.ssh/known_hosts 2>/dev/null"
   when:
     - docker_swarm_enabled | bool
     - docker_swarm_initial_manager is defined
@@ -138,7 +138,7 @@
 
 - name: Deploy Private Docker Auth SSH key.
   copy:
-      dest: /root/.ssh/id_rsa
+      dest: /home/vagrant/.ssh/id_rsa
       content: "{{ docker_swarm_initial_manager_ssh_private_key }}"
       mode: 0600
   when:

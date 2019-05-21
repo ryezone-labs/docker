@@ -111,7 +111,9 @@
   become: yes
 
 - name: Ensure known_hosts file exists.
-  command: "touch /root/.ssh/known_hosts"
+  file: 
+    state: touch
+    path: /root/.ssh/known_hosts"
   when:
     - docker_swarm_enabled | bool
     - docker_swarm_initial_manager is defined

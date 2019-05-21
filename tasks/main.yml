@@ -112,7 +112,7 @@
 
 - name: SSH Fingerprint initial manager.
   known_hosts:
-    hash_host: "{{ docker_swarm_initial_manager }}"
+    hash_host: yes
     name: "{{ docker_swarm_initial_manager }}"
     state: present
   when:

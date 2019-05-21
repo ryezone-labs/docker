@@ -113,7 +113,7 @@
 - name: Ensure .ssh directory exists.
   file: 
     state: directory
-    path: /root/.ssh/known_hosts
+    path: /root/.ssh
   when:
     - docker_swarm_enabled | bool
     - docker_swarm_initial_manager is defined

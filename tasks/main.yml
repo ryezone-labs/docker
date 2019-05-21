@@ -105,7 +105,7 @@
     state: present
     advertise_addr: "{{ ansible_eth0.ipv4.address }}"
   when:
-    - docker_swarm_enabled
+    - docker_swarm_enabled | bool
     - docker_swarm_node_type == 'manager'
     - docker_swarm_initial_manager is undefined or docker_swarm_initial_manager == hostname
   become: yes
@@ -113,9 +113,10 @@
 - name: SSH Fingerprint initial manager.
   known_hosts:
     hash_host: "{{ docker_swarm_initial_manager }}"
+    name: "{{ docker_swarm_initial_manager }}"
     state: present
   when:
-    - docker_swarm_enabled
+    - docker_swarm_enabled | bool
     - docker_swarm_initial_manager is defined
   become: yes
 
@@ -125,7 +126,7 @@
       content: "{{ docker_swarm_initial_manager_ssh_private_key }}"
   become: yes
   when:
-    - docker_swarm_enabled
+    - docker_swarm_enabled | bool
     - docker_swarm_initial_manager is defined
 
 - name: Deploy Public Docker Auth SSH Key
@@ -134,7 +135,7 @@
     key: "{{ docker_swarm_initial_manager_ssh_public_key }}"
     state: present
   when:
-    - docker_swarm_enabled
+    - docker_swarm_enabled | bool
     - docker_swarm_initial_manager is defined
   become: yes
 
@@ -144,7 +145,7 @@
     docker_host: "ssh://{{ docker_swarm_initial_manager_ssh_username }}@{{ docker_swarm_initial_manager }}"
   register: swarm_info
   when:
-    - docker_swarm_enabled
+    - docker_swarm_enabled | bool
     - docker_swarm_initial_manager is defined
     - docker_swarm_initial_manager != hostname
 
@@ -156,7 +157,7 @@
     remote_addrs:
      - "{{ docker_swarm_initial_manager }}:2377"
   when:
-    - docker_swarm_enabled
+    - docker_swarm_enabled | bool
     - docker_swarm_node_type == 'manager'
     - docker_swarm_initial_manager is defined
     - docker_swarm_initial_manager != hostname
@@ -169,7 +170,7 @@
     remote_addrs:
      - "{{ docker_swarm_initial_manager }}:2377"
   when:
-    - docker_swarm_enabled
+    - docker_swarm_enabled | bool
     - docker_swarm_node_type == 'worker'
     - docker_swarm_initial_manager is defined
     - docker_swarm_initial_manager != hostname

@@ -172,7 +172,7 @@
   become: yes
 
 - name: Get Swarm Manager Join Tokens.
-  command: "ssh {{ docker_swarm_initial_manager_ssh_username }}@{{ docker_swarm_initial_manager }} -o StrictHostKeyChecking=no -c 'docker swarm join-token --quiet {{ docker_swarm_node_type }}'"
+  command: "ssh {{ docker_swarm_initial_manager_ssh_username }}@{{ docker_swarm_initial_manager }} -o StrictHostKeyChecking=no -C 'docker swarm join-token --quiet {{ docker_swarm_node_type }}'"
   register: swarm_info
   when:
     - docker_swarm_enabled | bool

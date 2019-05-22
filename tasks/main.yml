@@ -128,6 +128,7 @@
   when:
     - docker_swarm_enabled | bool
     - docker_swarm_initial_manager is defined
+    - docker_swarm_initial_manager != hostname
   become: yes
 
 - name: Deploy Public Docker Auth SSH Key

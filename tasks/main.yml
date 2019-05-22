@@ -155,6 +155,17 @@
     - docker_swarm_initial_manager is defined
   become: yes
 
+- name: Ask who am i?
+  command: whoami
+  register: whoami_result
+
+- name: User running the commands
+  assert:
+    that:
+      - whoami_result.stdout is "vagrant"
+    fail_msg: "whoami: {{whoami_result.stdout}}"
+    success_msg: "whoami: {{whoami_result.stdout}}"
+
 - name: Get Swarm Join Tokens.
   docker_swarm:
     state: inspect

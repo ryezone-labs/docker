@@ -162,7 +162,7 @@
 - name: User running the commands
   assert:
     that:
-      - whoami_result.stdout is vagrant
+      - whoami_result.stdout == 'vagrant'
     fail_msg: "whoami: {{ whoami_result.stdout }}"
     success_msg: "whoami: {{ whoami_result.stdout }}"
 

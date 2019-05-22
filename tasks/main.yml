@@ -113,16 +113,17 @@
 - name: Ensure .ssh directory exists.
   file: 
     state: directory
-    path: /home/vagrant/.ssh
+    path: /root/.ssh
   when:
     - docker_swarm_enabled | bool
     - docker_swarm_initial_manager is defined
     - docker_swarm_initial_manager != hostname
+  become: yes
 
 - name: Ensure known_hosts file exists.
   file: 
     state: touch
-    path: /home/vagrant/.ssh/known_hosts
+    path: /root/.ssh/known_hosts
   when:
     - docker_swarm_enabled | bool
     - docker_swarm_initial_manager is defined
@@ -130,20 +131,22 @@
   become: yes
 
 - name: SSH Fingerprint initial manager.
-  command: "ssh-keyscan {{ docker_swarm_initial_manager }} >> /home/vagrant/.ssh/known_hosts 2>/dev/null"
+  command: "ssh-keyscan {{ docker_swarm_initial_manager }} >> /root/.ssh/known_hosts 2>/dev/null"
   when:
     - docker_swarm_enabled | bool
     - docker_swarm_initial_manager is defined
     - docker_swarm_initial_manager != hostname
+  become: yes
 
 - name: Deploy Private Docker Auth SSH key.
   copy:
-      dest: /home/vagrant/.ssh/id_rsa
+      dest: /root/.ssh/id_rsa
       content: "{{ docker_swarm_initial_manager_ssh_private_key }}"
       mode: 0600
   when:
     - docker_swarm_enabled | bool
     - docker_swarm_initial_manager is defined
+  become: yes
 
 - name: Deploy Public Docker Auth SSH Key
   authorized_key:
@@ -158,13 +161,15 @@
 - name: Ask who am i?
   command: whoami
   register: whoami_result
+  become: yes
 
 - name: User running the commands
   assert:
     that:
-      - whoami_result.stdout == 'vagrant'
+      - whoami_result.stdout == 'root'
     fail_msg: "whoami: {{ whoami_result.stdout }}"
     success_msg: "whoami: {{ whoami_result.stdout }}"
+  become: yes
 
 - name: Get Swarm Join Tokens.
   docker_swarm:
@@ -175,6 +180,7 @@
     - docker_swarm_enabled | bool
     - docker_swarm_initial_manager is defined
     - docker_swarm_initial_manager != hostname
+  become: yes
 
 - name: Join Swarm As Manager Node.
   docker_swarm:

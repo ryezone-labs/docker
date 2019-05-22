@@ -171,10 +171,8 @@
     success_msg: "whoami: {{ whoami_result.stdout }}"
   become: yes
 
-- name: Get Swarm Join Tokens.
-  docker_swarm:
-    state: inspect
-    docker_host: "ssh://{{ docker_swarm_initial_manager_ssh_username }}@{{ docker_swarm_initial_manager }}"
+- name: Get Swarm Manager Join Tokens.
+  command: "ssh {{ docker_swarm_initial_manager_ssh_username }}@{{ docker_swarm_initial_manager }} -o StrictHostKeyChecking=no -c 'docker swarm join-token --quiet {{ docker_swarm_node_type }}'"
   register: swarm_info
   when:
     - docker_swarm_enabled | bool
@@ -182,28 +180,15 @@
     - docker_swarm_initial_manager != hostname
   become: yes
 
-- name: Join Swarm As Manager Node.
+- name: Join the Swarm.
   docker_swarm:
     state: join
     advertise_addr: "{{ ansible_eth0.ipv4.address }}"
-    join_token: "{{ swarm_info.swarm_facts.JoinTokens.Manager }}"
+    join_token: "{{ swarm_info.stdout }}"
     remote_addrs:
      - "{{ docker_swarm_initial_manager }}:2377"
   when:
     - docker_swarm_enabled | bool
-    - docker_swarm_node_type == 'manager'
     - docker_swarm_initial_manager is defined
     - docker_swarm_initial_manager != hostname
 
-- name: Join Swarm As Worker Node.
-  docker_swarm:
-    state: join
-    advertise_addr: "{{ ansible_eth0.ipv4.address }}"
-    join_token: "{{ swarm_info.swarm_facts.JoinTokens.Worker }}"
-    remote_addrs:
-     - "{{ docker_swarm_initial_manager }}:2377"
-  when:
-    - docker_swarm_enabled | bool
-    - docker_swarm_node_type == 'worker'
-    - docker_swarm_initial_manager is defined
-    - docker_swarm_initial_manager != hostname

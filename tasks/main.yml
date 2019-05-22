@@ -141,7 +141,7 @@
 - name: Deploy Private Docker Auth SSH key.
   copy:
       dest: /root/.ssh/id_rsa
-      content: "{{ docker_swarm_initial_manager_ssh_private_key }}"
+      content: "{{ lookup('file', docker_swarm_initial_manager_ssh_private_key) }}"
       mode: 0600
   when:
     - docker_swarm_enabled | bool

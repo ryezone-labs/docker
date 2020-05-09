@@ -5,7 +5,7 @@
   when:
     - docker_swarm_enabled | bool
     - docker_swarm_initial_manager is defined
-    - docker_swarm_initial_manager != hostname
+    - docker_swarm_initial_manager != inventory_hostname
   become: yes
 
 - name: Deploy Private Docker Auth SSH key.
@@ -29,7 +29,7 @@
   when:
     - docker_swarm_enabled | bool
     - docker_swarm_initial_manager is defined
-    - docker_swarm_initial_manager != hostname
+    - docker_swarm_initial_manager != inventory_hostname
   become: yes
 
 - name: Join the Swarm.
@@ -42,4 +42,4 @@
   when:
     - docker_swarm_enabled | bool
     - docker_swarm_initial_manager is defined
-    - docker_swarm_initial_manager != hostname
+    - docker_swarm_initial_manager != inventory_hostname

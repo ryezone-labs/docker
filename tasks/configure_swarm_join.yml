@@ -11,7 +11,7 @@
 - name: Deploy Private Docker Auth SSH key.
   copy:
       dest: /root/.ssh/id_rsa
-      content: "{{ lookup('file', docker_swarm_initial_manager_ssh_private_key) }}"
+      content: "{{ docker_swarm_initial_manager_ssh_private_key }}"
       mode: 0600
 
 - name: Deploy Public Docker Auth SSH Key
@@ -19,6 +19,8 @@
     user: "{{ docker_swarm_initial_manager_ssh_username }}"
     key: "{{ lookup('file', docker_swarm_initial_manager_ssh_public_key) }}"
     state: present
+  when:
+    - docker_swarm_node_type == "master"
   become: yes
 
 - name: Get Swarm Manager Join Tokens.
@@ -33,7 +35,7 @@
 - name: Join the Swarm.
   docker_swarm:
     state: join
-    advertise_addr: "{{ ansible_eth0.ipv4.address }}"
+    advertise_addr: "{{ docker_advertise_addr }}"
     join_token: "{{ swarm_info.stdout }}"
     remote_addrs:
      - "{{ docker_swarm_initial_manager }}:2377"

@@ -1,4 +1,15 @@
+
+
 - name: Ensure docker swarm is present.
   docker_swarm:
     state: present
     advertise_addr: "{{ docker_advertise_addr }}"
+
+- name: Deploy Public Docker Auth SSH Key
+  authorized_key:
+    user: "{{ docker_swarm_initial_manager_ssh_username }}"
+    key: "{{ docker_swarm_initial_manager_ssh_public_key }}"
+    state: present
+  when:
+    - docker_swarm_node_type == "master"
+  become: yes

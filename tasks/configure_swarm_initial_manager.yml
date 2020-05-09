@@ -1,4 +1,4 @@
 - name: Ensure docker swarm is present.
   docker_swarm:
     state: present
-    advertise_addr: "{{ ansible_eth0.ipv4.address }}"
+    advertise_addr: "{{ docker_advertise_addr }}"

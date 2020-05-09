@@ -13,14 +13,18 @@ docker_metrics_addr_host: 0.0.0.0
 docker_metrics_addr_port: 9323
 docker_repository_key_url: https://download.docker.com/linux/ubuntu/gpg
 docker_repository_key_id: 9DC858229FC7DD38854AE2D88D81803C0EBFCD88
-docker_version: 5:19.03.8~3-0~ubuntu-bionic
-docker_ubuntu_version: bionic
-docker_release_type: stable
+docker_cli_version: 
 docker_repository_url: https://download.docker.com/linux/ubuntu
 docker_arch: amd64
-docker_product: docker-ce docker-ce-cli containerd.io
+
+docker_engine_product: docker-ce
+docker_engine_version: 5:19.03.8~3-0~ubuntu-bionic
+docker_ubuntu_version: bionic
+docker_release_type: stable
+docker_cli_product: "{{ docker_engine_product }}-cli"
+docker_cli_version: "{{ docker_engine_version }}"
+
 docker_repository: "deb [arch={{ docker_arch }}] {{ docker_repository_url }} {{ docker_ubuntu_version }} {{ docker_release_type }}"
-docker_package: "{{ docker_product }}={{ docker_version }}"
 docker_users:
     - vagrant
 docker_swarm_enabled: false

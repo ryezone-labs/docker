@@ -1,0 +1,44 @@
+- name: Get Docker's official GPG key
+  apt_key:
+    url: "{{ docker_repository_key_url }}"
+    id: "{{ docker_repository_key_id }}"
+  become: yes
+
+- name: Add Docker CE Stable Repository
+  apt_repository:
+    repo: "{{ docker_repository }}"
+    state: present
+  become: yes
+
+- name: Install docker engine
+  package:
+    name: "{{ docker_engine_product }}={{ docker_engine_version }}"
+    state: present
+  become: yes
+
+- name: Install docker cli
+  package:
+    name: "{{ docker_cli_product }}={{ docker_cli_version }}"
+    state: present
+
+- name: Install containerd.io
+  package:
+    name: containerd.io
+    state: present
+
+- name: Ensure docker group is present
+  group:
+    gid: '1337'
+    name: docker
+    state: present
+    system: yes
+  notify: restart docker
+  become: yes
+
+- name: Add user to docker group.
+  user:
+    name: "{{ item }}"
+    groups: docker
+    append: yes
+  loop: "{{ docker_users }}"
+  become: yes

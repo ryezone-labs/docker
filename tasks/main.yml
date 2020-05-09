@@ -14,7 +14,7 @@
     dest: /usr/local/bin/docker-compose
     mode: 0755
     checksum: "{{ docker_compose_checksum }}"
-  when: "{{ docker_compose_install }}"
+  when: docker_compose_install | bool
   become: yes
 
 - name: Configure Docker daemon.json
@@ -33,5 +33,5 @@
 
 - name: Install ContainX Netshare
   include: containx_netshare.yml
-  when: "{{ docker_containx_netshare_install }}"
+  when: docker_containx_netshare_install | bool
   become: yes

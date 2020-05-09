@@ -4,8 +4,11 @@ docker_compose_install: True
 docker_compose_version: 1.25.5
 docker_compose_checksum: "sha256:1cb7ecccc17c8d5f1888f9e2b3211b07e35c86d0010a6c0f711fe65ef5b69528"
 docker_compose_install: False
+
+docker_containx_netshare_install: False
 docker_containx_netshare_version: "0.35"
 docker_containx_netshare_checksum: "sha256:96b6001b8504926f623bfb1cd065ed6ce1f0eedcb189ee3adb009f79f88c08c5"
+
 docker_experimental: True
 docker_log_driver: json-file
 docker_log_opts: {}

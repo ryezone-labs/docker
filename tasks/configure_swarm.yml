@@ -9,7 +9,7 @@
   include: configure_swarm_initial_manager.yml
   when:
     - docker_swarm_node_type == 'manager'
-    - docker_swarm_initial_manager is undefined or docker_swarm_initial_manager == hostname
+    - docker_swarm_initial_manager is undefined or docker_swarm_initial_manager == inventory_hostname
   become: yes
 
 - name: Join the Swarm

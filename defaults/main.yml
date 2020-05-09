@@ -9,7 +9,7 @@ docker_containx_netshare_install: False
 docker_containx_netshare_version: "0.35"
 docker_containx_netshare_checksum: "sha256:96b6001b8504926f623bfb1cd065ed6ce1f0eedcb189ee3adb009f79f88c08c5"
 
-docker_experimental: True
+docker_experimental: true
 docker_log_driver: json-file
 docker_log_opts: {}
 docker_metrics_addr_host: 0.0.0.0

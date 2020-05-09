@@ -4,7 +4,7 @@
   "log-driver":"{{ docker_log_driver }}",
   "log-opts": {
       {% if docker_log_opts is defined %}
-        {% for key, value in docker_log_opts %}
+        {% for key, value in docker_log_opts.items() %}
         "{{ key }}":"{{ value }}"{}{{ "," if not loop.last }}
 
         {% endfor %}

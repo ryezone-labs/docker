@@ -27,6 +27,11 @@
   become: yes
   notify: restart docker
 
+- name: Ensure Docker is started
+  service:
+    name: docker
+    state: started
+
 - name: Configure Swarm
   include: configure_swarm.yml
   become: yes

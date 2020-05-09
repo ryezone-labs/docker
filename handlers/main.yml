@@ -5,3 +5,8 @@
     name: docker
     state: restarted
   become: yes
+
+- name: restart containx netshare
+  service:
+    name: docker-volume-netshare
+    state: restarted

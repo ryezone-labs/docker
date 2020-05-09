@@ -1,0 +1,13 @@
+{
+  "metrics-addr" : "{{ docker_metrics_addr_host }}:{{ docker_metrics_addr_port }}",
+  "experimental" : {{ docker_experimental }},
+  "log-driver":"{{ docker_log_driver }}",
+  "log-opts": {
+      {% if docker_log_opts is defined %}
+        {% for key, value in docker_log_opts %}
+        "{{ key }}":"{{ value }}"{}{{ "," if not loop.last }}
+
+        {% endfor %}
+      {% endif %}
+  }
+}

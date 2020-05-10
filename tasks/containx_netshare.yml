@@ -15,5 +15,5 @@
 - name: Enable ContainX NetShare
   service:
     name: docker-volume-netshare
-    state: enabled
-  notify: restart containx netshare
+    enabled: yes
+    state: started

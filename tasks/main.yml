@@ -1,80 +1,11 @@
 ---
 # tasks file for docker
-- name: Remove docker
-  package:
-    name: docker
-    state: absent
+- name: Prepare Host for Docker Install
+  include: install_prereqs.yml
   become: yes
 
-- name: Remove docker-engine
-  package:
-    name: docker-engine
-    state: absent
-  become: yes
-
-- name: Remove docker.io
-  package:
-    name: docker.io
-    state: absent
-  become: yes
-
-- name: Install apt-transport-https
-  package:
-    name: apt-transport-https
-    state: present
-  become: yes
-
-- name: Install ca-certificates
-  package:
-    name: ca-certificates
-    state: present
-  become: yes
-
-- name: Install curl
-  package:
-    name: curl
-    state: present
-  become: yes
-
-- name: Install software-properties-common
-  package:
-    name: software-properties-common
-    state: present
-  become: yes
-
-- name: Get Docker's official GPG key
-  apt_key:
-    url: "{{ docker_repository_key_url }}"
-    id: "{{ docker_repository_key_id }}"
-  become: yes
-
-- name: Add Docker CE Stable Repository
-  apt_repository:
-    repo: "{{ docker_repository }}"
-    state: present
-  become: yes
-
-- name: Install docker-ce
-  package:
-    name: "{{ docker_package }}"
-    state: present
-  become: yes
-
-- name: Ensure docker group is present
-  group:
-    gid: '1337'
-    name: docker
-    state: present
-    system: yes
-  notify: restart docker
-  become: yes
-
-- name: Add user to docker group.
-  user:
-    name: "{{ item }}"
-    groups: docker
-    append: yes
-  loop: "{{ docker_users }}"
+- name: Install Docker
+  include: install_docker.yml
   become: yes
 
 - name: Install docker-compose
@@ -83,81 +14,29 @@
     dest: /usr/local/bin/docker-compose
     mode: 0755
     checksum: "{{ docker_compose_checksum }}"
+  when: docker_compose_install | bool
   become: yes
 
-- name: Install python-pip
-  package:
-    name:
-      - python-pip
-    state: present
+- name: Configure Docker daemon.json
+  template:
+    src: daemon.json.j2
+    dest: /etc/docker/daemon.json
+    mode: 0644
+    lstrip_blocks: yes
+    trim_blocks: yes
+  become: yes
+  notify: restart docker
+
+- name: Ensure Docker is started
+  service:
+    name: docker
+    state: started
+
+- name: Configure Swarm
+  include: configure_swarm.yml
   become: yes
 
-- name: Install docker python module.
-  pip:
-    name:
-      - docker
-      - paramiko
-    state: present
+- name: Install ContainX Netshare
+  include: containx_netshare.yml
+  when: docker_containx_netshare_install | bool
   become: yes
-
-- name: Ensure docker swarm is present.
-  docker_swarm:
-    state: present
-    advertise_addr: "{{ ansible_eth0.ipv4.address }}"
-  when:
-    - docker_swarm_enabled | bool
-    - docker_swarm_node_type == 'manager'
-    - docker_swarm_initial_manager is undefined or docker_swarm_initial_manager == hostname
-  become: yes
-
-- name: Ensure .ssh directory exists.
-  file: 
-    state: directory
-    path: /root/.ssh
-  when:
-    - docker_swarm_enabled | bool
-    - docker_swarm_initial_manager is defined
-    - docker_swarm_initial_manager != hostname
-  become: yes
-
-- name: Deploy Private Docker Auth SSH key.
-  copy:
-      dest: /root/.ssh/id_rsa
-      content: "{{ lookup('file', docker_swarm_initial_manager_ssh_private_key) }}"
-      mode: 0600
-  when:
-    - docker_swarm_enabled | bool
-    - docker_swarm_initial_manager is defined
-    - docker_swarm_initial_manager != hostname
-  become: yes
-
-- name: Deploy Public Docker Auth SSH Key
-  authorized_key:
-    user: "{{ docker_swarm_initial_manager_ssh_username }}"
-    key: "{{ lookup('file', docker_swarm_initial_manager_ssh_public_key) }}"
-    state: present
-  when:
-    - docker_swarm_enabled | bool
-    - docker_swarm_initial_manager is defined
-  become: yes
-
-- name: Get Swarm Manager Join Tokens.
-  command: "ssh {{ docker_swarm_initial_manager_ssh_username }}@{{ docker_swarm_initial_manager }} -o StrictHostKeyChecking=no -C 'docker swarm join-token --quiet {{ docker_swarm_node_type }}'"
-  register: swarm_info
-  when:
-    - docker_swarm_enabled | bool
-    - docker_swarm_initial_manager is defined
-    - docker_swarm_initial_manager != hostname
-  become: yes
-
-- name: Join the Swarm.
-  docker_swarm:
-    state: join
-    advertise_addr: "{{ ansible_eth0.ipv4.address }}"
-    join_token: "{{ swarm_info.stdout }}"
-    remote_addrs:
-     - "{{ docker_swarm_initial_manager }}:2377"
-  when:
-    - docker_swarm_enabled | bool
-    - docker_swarm_initial_manager is defined
-    - docker_swarm_initial_manager != hostname

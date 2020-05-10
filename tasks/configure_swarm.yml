@@ -1,0 +1,30 @@
+---
+- name: Install Swarm Prerequisites
+  include: configure_swarm_prereqs.yml
+  when:
+    - docker_swarm_enabled | bool
+  become: yes
+
+- name: Configure Initial Swarm Manager
+  include: configure_swarm_initial_manager.yml
+  when:
+    - docker_swarm_node_type == 'manager'
+    - docker_swarm_initial_manager is undefined or docker_swarm_initial_manager == inventory_hostname
+  become: yes
+
+- name: Deploy Public Docker Auth SSH Key
+  authorized_key:
+    user: "{{ docker_swarm_initial_manager_ssh_username }}" 
+    key: "{{ docker_swarm_initial_manager_ssh_public_key }}"
+    state: present
+  when:
+    - docker_swarm_node_type == 'manager'
+  become: yes
+
+- name: Join the Swarm
+  include: configure_swarm_join.yml
+  when:
+    - docker_swarm_enabled | bool
+    - docker_swarm_initial_manager is defined
+    - docker_swarm_initial_manager != inventory_hostname
+  become: yes

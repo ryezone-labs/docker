@@ -1,0 +1,13 @@
+---
+- name: Install python-pip
+  package:
+    name:
+      - python-pip
+    state: present
+
+- name: Install docker python module.
+  pip:
+    name:
+      - docker
+      - paramiko
+    state: present

@@ -1,0 +1,42 @@
+---
+- name: Remove docker
+  package:
+    name: docker
+    state: absent
+  become: yes
+
+- name: Remove docker-engine
+  package:
+    name: docker-engine
+    state: absent
+  become: yes
+
+- name: Remove docker.io
+  package:
+    name: docker.io
+    state: absent
+  become: yes
+
+- name: Install apt-transport-https
+  package:
+    name: apt-transport-https
+    state: present
+  become: yes
+
+- name: Install ca-certificates
+  package:
+    name: ca-certificates
+    state: present
+  become: yes
+
+- name: Install curl
+  package:
+    name: curl
+    state: present
+  become: yes
+
+- name: Install software-properties-common
+  package:
+    name: software-properties-common
+    state: present
+  become: yes

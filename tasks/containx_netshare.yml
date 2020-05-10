@@ -1,0 +1,19 @@
+---
+- name: Download ContainX NetShare
+  get_url:
+    url: "https://github.com/ContainX/docker-volume-netshare/releases/download/v{{ docker_containx_netshare_version }}/docker-volume-netshare_{{ docker_containx_netshare_version }}_amd64.deb"
+    dest: /tmp/containx_netshare.deb
+    mode: 0700
+    checksum: "{{ docker_containx_netshare_checksum }}"
+  become: yes
+
+- name: Install ContainX NetShare
+  apt:
+    deb: /tmp/containx_netshare.deb
+  become: yes
+
+- name: Enable ContainX NetShare
+  service:
+    name: docker-volume-netshare
+    enabled: yes
+    state: started

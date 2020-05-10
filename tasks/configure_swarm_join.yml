@@ -13,7 +13,8 @@
       dest: /root/.ssh/id_rsa
       content: "{{ docker_swarm_initial_manager_ssh_private_key }}"
       mode: 0600
-
+  become: yes
+  
 - name: Deploy Public Docker Auth SSH Key
   authorized_key:
     user: "{{ docker_swarm_initial_manager_ssh_username }}"

@@ -15,15 +15,6 @@
       mode: 0600
   become: yes
   
-- name: Deploy Public Docker Auth SSH Key
-  authorized_key:
-    user: "{{ docker_swarm_initial_manager_ssh_username }}" 
-    key: "{{ lookup('file', docker_swarm_initial_manager_ssh_public_key) }}"
-    state: present
-  when:
-    - docker_swarm_node_type == "manager"
-  become: yes
-
 - name: Get Swarm Manager Join Tokens.
   command: "ssh {{ docker_swarm_initial_manager_ssh_username }}@{{ docker_swarm_initial_manager }} -o StrictHostKeyChecking=no -C 'docker swarm join-token --quiet {{ docker_swarm_node_type }}'"
   register: swarm_info

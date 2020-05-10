@@ -17,11 +17,11 @@
   
 - name: Deploy Public Docker Auth SSH Key
   authorized_key:
-    user: "{{ docker_swarm_initial_manager_ssh_username }}"
+    user: "{{ docker_swarm_initial_manager_ssh_username }}" 
     key: "{{ lookup('file', docker_swarm_initial_manager_ssh_public_key) }}"
     state: present
   when:
-    - docker_swarm_node_type == "master"
+    - docker_swarm_node_type == "manager"
   become: yes
 
 - name: Get Swarm Manager Join Tokens.

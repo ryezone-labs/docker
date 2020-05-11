@@ -40,3 +40,9 @@
     name: software-properties-common
     state: present
   become: yes
+
+- name: Install nfs-common
+  package:
+    name: nfs-common
+    state: present
+  become: yes

@@ -2,11 +2,11 @@
 # tasks file for docker
 - name: Prepare Host for Docker Install
   include: install_prereqs.yml
-  become: yes
+  become: true
 
 - name: Install Docker
   include: install_docker.yml
-  become: yes
+  become: true
 
 - name: Install docker-compose
   get_url:
@@ -15,16 +15,16 @@
     mode: 0755
     checksum: "{{ docker_compose_checksum }}"
   when: docker_compose_install | bool
-  become: yes
+  become: true
 
 - name: Configure Docker daemon.json
   template:
     src: daemon.json.j2
     dest: /etc/docker/daemon.json
     mode: 0644
-    lstrip_blocks: yes
-    trim_blocks: yes
-  become: yes
+    lstrip_blocks: true
+    trim_blocks: true
+  become: true
   notify: restart docker
 
 - name: Ensure Docker is started
@@ -34,9 +34,9 @@
 
 - name: Configure Swarm
   include: configure_swarm.yml
-  become: yes
+  become: true
 
 - name: Install ContainX Netshare
   include: containx_netshare.yml
   when: docker_containx_netshare_install | bool
-  become: yes
+  become: true

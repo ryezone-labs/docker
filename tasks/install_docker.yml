@@ -1,20 +1,21 @@
+---
 - name: Get Docker's official GPG key
   apt_key:
     url: "{{ docker_repository_key_url }}"
     id: "{{ docker_repository_key_id }}"
-  become: yes
+  become: true
 
 - name: Add Docker CE Stable Repository
   apt_repository:
     repo: "{{ docker_repository }}"
     state: present
-  become: yes
+  become: true
 
 - name: Install docker engine
   package:
     name: "{{ docker_engine_product }}={{ docker_engine_version }}"
     state: present
-  become: yes
+  become: true
 
 - name: Install docker cli
   package:
@@ -31,14 +32,15 @@
     gid: '1337'
     name: docker
     state: present
-    system: yes
+    system: true
   notify: restart docker
-  become: yes
+  become: true
 
 - name: Add user to docker group.
   user:
     name: "{{ item }}"
-    groups: docker
-    append: yes
+    groups: 
+      - docker
+    append: true
   loop: "{{ docker_users }}"
-  become: yes
+  become: true

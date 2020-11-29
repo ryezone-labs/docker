@@ -1,8 +1,7 @@
 ---
 - name: Install python-pip
   package:
-    name:
-      - python-pip
+    name: python-pip
     state: present
 
 - name: Install docker python module.

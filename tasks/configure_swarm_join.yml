@@ -1,20 +1,21 @@
+---
 - name: Ensure .ssh directory exists.
-  file: 
+  file:
     state: directory
     path: /root/.ssh
   when:
     - docker_swarm_enabled | bool
     - docker_swarm_initial_manager is defined
     - docker_swarm_initial_manager != inventory_hostname
-  become: yes
+  become: true
 
 - name: Deploy Private Docker Auth SSH key.
   copy:
-      dest: /root/.ssh/id_rsa
-      content: "{{ docker_swarm_initial_manager_ssh_private_key }}"
-      mode: 0600
-  become: yes
-  
+    dest: /root/.ssh/id_rsa
+    content: "{{ docker_swarm_initial_manager_ssh_private_key }}"
+    mode: 0600
+  become: true
+
 - name: Get Swarm Manager Join Tokens.
   command: "ssh {{ docker_swarm_initial_manager_ssh_username }}@{{ docker_swarm_initial_manager }} -o StrictHostKeyChecking=no -C 'docker swarm join-token --quiet {{ docker_swarm_node_type }}'"
   register: swarm_info
@@ -22,7 +23,7 @@
     - docker_swarm_enabled | bool
     - docker_swarm_initial_manager is defined
     - docker_swarm_initial_manager != inventory_hostname
-  become: yes
+  become: true
 
 - name: Join the Swarm.
   docker_swarm:
@@ -30,7 +31,7 @@
     advertise_addr: "{{ docker_advertise_addr }}"
     join_token: "{{ swarm_info.stdout }}"
     remote_addrs:
-     - "{{ docker_swarm_initial_manager }}:2377"
+      - "{{ docker_swarm_initial_manager }}:2377"
   when:
     - docker_swarm_enabled | bool
     - docker_swarm_initial_manager is defined

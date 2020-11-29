@@ -1,5 +1,4 @@
-
-
+---
 - name: Ensure docker swarm is present.
   docker_swarm:
     state: present
@@ -12,4 +11,4 @@
     state: present
   when:
     - docker_swarm_node_type == "master"
-  become: yes
+  become: true

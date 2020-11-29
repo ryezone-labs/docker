@@ -5,15 +5,15 @@
     dest: /tmp/containx_netshare.deb
     mode: 0700
     checksum: "{{ docker_containx_netshare_checksum }}"
-  become: yes
+  become: true
 
 - name: Install ContainX NetShare
   apt:
     deb: /tmp/containx_netshare.deb
-  become: yes
+  become: true
 
 - name: Enable ContainX NetShare
   service:
     name: docker-volume-netshare
-    enabled: yes
+    enabled: true
     state: started

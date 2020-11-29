@@ -3,46 +3,46 @@
   package:
     name: docker
     state: absent
-  become: yes
+  become: true
 
 - name: Remove docker-engine
   package:
     name: docker-engine
     state: absent
-  become: yes
+  become: true
 
 - name: Remove docker.io
   package:
     name: docker.io
     state: absent
-  become: yes
+  become: true
 
 - name: Install apt-transport-https
   package:
     name: apt-transport-https
     state: present
-  become: yes
+  become: true
 
 - name: Install ca-certificates
   package:
     name: ca-certificates
     state: present
-  become: yes
+  become: true
 
 - name: Install curl
   package:
     name: curl
     state: present
-  become: yes
+  become: true
 
 - name: Install software-properties-common
   package:
     name: software-properties-common
     state: present
-  become: yes
+  become: true
 
 - name: Install nfs-common
   package:
     name: nfs-common
     state: present
-  become: yes
+  become: true
